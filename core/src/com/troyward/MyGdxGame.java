@@ -3,6 +3,7 @@ package com.troyward;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -24,8 +25,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float FRICTION = 0.9f;
 	static final int WIDTH = 16;
 	static final int HEIGHT = 16;
-	static final int DRAW_WIDTH = WIDTH * 3;
-	static final int DRAW_HEIGHT = HEIGHT * 3;
+	static final float DRAW_WIDTH = WIDTH * 2.5f;
+	static final float DRAW_HEIGHT = HEIGHT * 2.5f;
 
 	
 	@Override
@@ -50,11 +51,29 @@ public class MyGdxGame extends ApplicationAdapter {
 		move();
 
 		TextureRegion person;
+		Gdx.graphics.setWindowedMode(800,600);
+
+		if (x > 725) {
+			x = 0;
+		}
+
+		if (x < 0) {
+			x = 725;
+		}
+
+		if (y > 520) {
+			y = 0;
+		}
+
+		if (y < 0) {
+			y = 520;
+		}
+
 		if (yv > 0) {
-			person = walkUp.getKeyFrame(totalTime,false);
+			person = walkUp.getKeyFrame(totalTime,true);
 		}
 		else if (yv < 0) {
-			person = walkDown.getKeyFrame(totalTime,false);
+			person = walkDown.getKeyFrame(totalTime,true);
 		}
 		else if (xv != 0) {
 			person = walkRight.getKeyFrame(totalTime,true);
