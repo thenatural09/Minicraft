@@ -40,6 +40,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		left = new TextureRegion(right);
 		left.flip(true,false);
 		walkRight = new Animation(0.3f,grid[6][2],grid[6][3]);
+		walkUp = new Animation(0.3f,grid[6][2],grid[6][1]);
+		walkDown = new Animation(0.3f,grid[6][2],grid[6][0]);
 	}
 
 	@Override
@@ -49,16 +51,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		TextureRegion person;
 		if (yv > 0) {
-			person = up;
+			person = walkUp.getKeyFrame(totalTime,false);
 		}
 		else if (yv < 0) {
-			person = down;
+			person = walkDown.getKeyFrame(totalTime,false);
 		}
-		else if (xv > 0) {
-			person = walkRight.getKeyFrame(totalTime);
-		}
-		else if (xv < 0) {
-			person = left;
+		else if (xv != 0) {
+			person = walkRight.getKeyFrame(totalTime,true);
 		} else {
 			person = stand;
 		}
@@ -67,7 +66,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(person, x, y, DRAW_WIDTH, DRAW_HEIGHT);
+		if (faceRight) {
+			batch.draw(person, x, y, DRAW_WIDTH, DRAW_HEIGHT);
+		} else {
+			batch.draw(person, x + DRAW_WIDTH,y,DRAW_WIDTH*-1,DRAW_HEIGHT);
+		}
 		batch.end();
 	}
 	
