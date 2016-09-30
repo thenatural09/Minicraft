@@ -1,16 +1,20 @@
 package com.troyward;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 
-public class MyGdxGame extends ApplicationAdapter {
+public class MyGdxGame extends ApplicationAdapter implements Disposable {
 	SpriteBatch batch;
 	Texture img;
 	TextureRegion down,up,right,left,stand;
@@ -19,6 +23,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	Animation walkRight;
 	Animation walkUp;
 	Animation walkDown;
+	Music music;
+
+
 
 	static final float VELOCITY = 200;
 	static final float SPACE_VELOCITY = 400;
@@ -28,9 +35,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	static final float DRAW_WIDTH = WIDTH * 2.5f;
 	static final float DRAW_HEIGHT = HEIGHT * 2.5f;
 
-	
+
 	@Override
 	public void create () {
+		music = Gdx.audio.newMusic(Gdx.files.external("Downloads/FluteyMinicraftSong.mp3"));
 		batch = new SpriteBatch();
 		img = new Texture("tiles.png");
 		TextureRegion[][] grid = TextureRegion.split(img,WIDTH,HEIGHT);
@@ -47,6 +55,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		music.play();
 		totalTime += Gdx.graphics.getDeltaTime();
 		move();
 
@@ -82,7 +91,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0.2f, 0.85f, 0.2f, 0.75f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		if (faceRight) {
@@ -97,6 +106,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+		music.dispose();
 	}
 
 	public void move () {
