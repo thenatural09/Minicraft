@@ -15,10 +15,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
 public class MyGdxGame extends ApplicationAdapter implements Disposable {
-	SpriteBatch batch;
+	SpriteBatch batch,spriteBatch;
 	Texture img;
-	TextureRegion down,up,right,left,stand;
-	float x,y,xv,yv,totalTime;
+	TextureRegion down,up,right,left,stand,upFlip,downFlip,zDown,zUp,zRight,zLeft,zStand;
+	float x,y,xv,yv,totalTime,zx,zy,zxv,zyv;
 	boolean faceRight = true;
 	Animation walkRight;
 	Animation walkUp;
@@ -48,9 +48,13 @@ public class MyGdxGame extends ApplicationAdapter implements Disposable {
 		stand = grid[6][2];
 		left = new TextureRegion(right);
 		left.flip(true,false);
+		upFlip = new TextureRegion(up);
+		upFlip.flip(true,false);
+		downFlip = new TextureRegion(down);
+		downFlip.flip(true,false);
 		walkRight = new Animation(0.3f,stand,right);
-		walkUp = new Animation(0.3f,stand,up);
-		walkDown = new Animation(0.3f,stand,down);
+		walkUp = new Animation(0.3f,upFlip,up);
+		walkDown = new Animation(0.3f,downFlip,down);
 	}
 
 	@Override
@@ -62,10 +66,8 @@ public class MyGdxGame extends ApplicationAdapter implements Disposable {
 
 		//windowed and person flipping
 		move();
-
-		TextureRegion person;
 		Gdx.graphics.setWindowedMode(800,600);
-
+		TextureRegion person;
 		if (x > 725) {
 			x = 0;
 		}
@@ -113,6 +115,7 @@ public class MyGdxGame extends ApplicationAdapter implements Disposable {
 		batch.dispose();
 		img.dispose();
 		music.dispose();
+		spriteBatch.dispose();
 	}
 
 	public void move () {
@@ -163,5 +166,41 @@ public class MyGdxGame extends ApplicationAdapter implements Disposable {
 			velocity = 0;
 		}
 		return velocity;
+	}
+
+	public void zombieMove() {
+		if(zx == 500 && zy == 0) {
+			zxv = 0;
+			zyv = VELOCITY;
+			zy = Gdx.graphics.getDeltaTime() * zyv;
+		}
+		else if (zy == 500 && zx == 500) {
+			zyv = 0;
+			zxv = VELOCITY * -1;
+			zx = Gdx.graphics.getDeltaTime() * zxv;
+		}
+		else if (zx == 0 && zy == 500) {
+			zxv = 0;
+			zyv = VELOCITY*-1;
+			zy = Gdx.graphics.getDeltaTime() * zyv;
+		}
+		else if (zx == 0 && zy == 0) {
+			zxv = VELOCITY;
+			zx = Gdx.graphics.getDeltaTime() * zxv;
+			zyv = 0;
+		}
+	}
+
+	public void renderingZombie() {
+		//rendering zombie
+		img = new Texture("tiles.png");
+		TextureRegion[][] grid = TextureRegion.split(img,WIDTH,HEIGHT);
+		spriteBatch = new SpriteBatch();
+		zDown = grid[6][4];
+		zUp = grid[6][5];
+		zRight = grid[6][3];
+		zStand = grid[6][2];
+		zLeft = new TextureRegion(zRight);
+		zLeft.flip(true,false);
 	}
 }
